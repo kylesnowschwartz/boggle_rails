@@ -2,6 +2,8 @@
   <% @board.new_board! %>    
 <% end %>
 
+<textarea form="user_input" rows='30' class="words" autofocus>
+</textarea>
 <table id="board">
   <% @board.board.each do |row| %>
     <tr>
@@ -15,6 +17,10 @@
     </tr>
   <% end %>
 </table>
+
+<form id="user_input">
+</form>
+
 
 <div class='scoring_instructions'>
   <h2> How to Score your Words </h2>

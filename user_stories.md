@@ -1,4 +1,9 @@
 # Single Player MVP
+as a user:
+    - I want to be provided a text box
+        - so that I can keep track of my words without the use of pen and paper
+
+
 As a user:
     - I want to make a new game
         - so that I can play more than 1 game
