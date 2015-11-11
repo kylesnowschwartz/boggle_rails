@@ -4,7 +4,6 @@ class BoardsController < ApplicationController
 
   def create
     @board = Board.create!
-
     redirect_to @board
   end
 

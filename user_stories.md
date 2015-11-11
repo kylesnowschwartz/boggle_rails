@@ -2,6 +2,8 @@
 as a user:
     - I want to be provided a text box
         - so that I can keep track of my words without the use of pen and paper
+    - I want to submit a word
+        - so that it can be checked for validity
 
 
 As a user:

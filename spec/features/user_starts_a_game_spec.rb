@@ -17,4 +17,8 @@ describe "starting a new game", type: :feature do
   it "has a text box on the page" do
     expect(page).to have_css '#user_input'
   end
+
+  it "has a submit button for the text area" do
+    expect(page).to have_css '.submit_user_input'
+  end
 end

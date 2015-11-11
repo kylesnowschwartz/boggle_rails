@@ -1,4 +1,6 @@
 class Board < ActiveRecord::Base
+  has_many :words, dependent: :destroy
+
   attr_reader :letters, :board
 
   DICE = [
