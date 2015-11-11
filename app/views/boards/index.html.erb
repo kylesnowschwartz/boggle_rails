@@ -1,0 +1,18 @@
+<div id="index">
+  <h1> Welcome to Boggle </h1>
+
+  <p>Boggle is played with a 4x4 grid of randomly assigned letters.</p>
+
+  <p>The object is to find as many words as you can in the grid, according to the following rules</p>
+  <ul>
+    <li>The letters must be adjoining in a chain, and may be adjacent horizontally, vertically, or diagonally</li>
+    <li>Words must contain at least three letters</li>
+    <li>No single letter tile may be used twice in the same word</li>
+  </ul>
+  <p>Use a pen and paper to keep track of your words</p>
+
+  <%= form_for :board, url: boards_path do |f| %>
+    <p> Ready to play? Click below. </p>
+    <%= f.submit 'Start a New Game'%>
+  <% end %>
+</div>

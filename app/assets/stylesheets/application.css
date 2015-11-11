@@ -13,3 +13,49 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background: black;
+}
+
+.scoring_instructions {
+  color: white;
+  font-size: 110%;
+  padding: 20px;
+}
+
+#index {
+  color: white;
+  font-size: 150%;
+}
+
+#board {
+  position: relative;
+  top: 50%;
+  transform: translateY(10%);
+  margin: 20px; 
+  width: 40%;
+}
+
+td {
+  position: relative;
+}
+
+td:after{
+  content: '';
+  display: block;
+  margin-top: 100%;
+}
+
+td .content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 400%;
+  line-height; 90px;
+}

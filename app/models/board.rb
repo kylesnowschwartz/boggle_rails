@@ -1,5 +1,5 @@
 class Board < ActiveRecord::Base
-  attr_reader :letters
+  attr_reader :letters, :board
 
   DICE = [
     "AAEEGN", "ELRTTY", "AOOTTW", "ABBJOO", 
@@ -11,13 +11,13 @@ class Board < ActiveRecord::Base
   def new_board!
     shake!
 
-    board = []
+    @board = []
 
     a = qs_to_qus(@letters)
     
-    4.times { board << a.shift(4) }
+    4.times { @board << a.shift(4) }
     
-    board
+    @board
   end
 
   def shake!

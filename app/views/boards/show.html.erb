@@ -1,0 +1,36 @@
+<% if @board.board.blank? %>
+  <% @board.new_board! %>    
+<% end %>
+
+<table id="board">
+  <% @board.board.each do |row| %>
+    <tr>
+      <% row.each do |letter| %>
+          <td>
+            <div class="content">
+              <%= letter %>
+            </div>
+          </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<div class='scoring_instructions'>
+  <h2> How to Score your Words </h2>
+
+  <ul>
+    <li>3 letters: 1 point</li>
+    <li>4 letters: 1 points</li>
+    <li>5 letters: 2 points</li>
+    <li>6 letters: 3 points</li>
+    <li>7 letters: 4 points</li>
+    <li>8 or more letters : 11 points</li>
+  </ul>
+    
+  <p>Note:</p>
+  <ul>
+    <li>Qu can be used as 1 or both letters, and counts as 2 letters in your word</li>
+    <li>Any word found in the dictionary is valid</li>
+  </ul>
+</div>
