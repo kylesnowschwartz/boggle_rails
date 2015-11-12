@@ -1,12 +1,8 @@
-<% if @board.board.blank? %>
-  <% @board.new_board! %>    
+<%= form_for :word, url: board_words_path(board_id: @board.id) do |f| %>
+  <%= f.text_area :word, size: "30x15", autofocus: true, class: "words" %>
+  <%= f.submit "Submit Words" %>
 <% end %>
 
-<form id="user_input">
-  <textarea form="user_input" rows='15' class="words" autofocus>
-  </textarea>
-  <button class="submit_user_input"></button>
-</form>
 
 <table id="board">
   <% @board.board.each do |row| %>
