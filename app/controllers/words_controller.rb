@@ -3,7 +3,7 @@ class WordsController < ApplicationController
     p params[:word]
     @board = Board.find(params[:board_id])
 
-    @word = Word.create!(board: @board, word: params[:word])
+    ParseWords.new(params[:word][:word], @board).call
 
     redirect_to @board
   end
