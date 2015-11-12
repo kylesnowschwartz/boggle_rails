@@ -4,6 +4,8 @@ as a user:
         - so that I can keep track of my words without the use of pen and paper
     - I want to submit a word
         - so that it can be checked for validity
+    - I want to see which of my words are correct and incorrect
+        - so that I can tally a score
 
 
 As a user:
