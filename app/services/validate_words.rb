@@ -11,8 +11,9 @@ class ValidateWords
       valid_words: [],
       invalid_words: []
     }
-
+    
     @words
+      .pluck("word")
       .each { |word| DICTIONARY.include?(word) ? validated_words[:valid_words] << word : validated_words[:invalid_words] << word}
 
     validated_words

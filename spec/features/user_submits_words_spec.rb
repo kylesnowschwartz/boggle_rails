@@ -6,7 +6,7 @@ describe "submit words for validation" do
   before :each do
     @board = board
     visit "/boards/#{ board.id }"
-    fill_in("word_words", :with => "toast; beer\n cheese\r 123 apple")
+    fill_in("words_text_area", :with => "toast; beer\n cheese\r 123 apple")
     click_button("Submit Words")
   end
 

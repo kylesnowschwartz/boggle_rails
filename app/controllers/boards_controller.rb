@@ -9,6 +9,6 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find(params[:id])
-    # @board.board
+    @validated_words = ValidateWords.new(@board.words).call
   end
 end

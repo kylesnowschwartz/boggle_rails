@@ -60,6 +60,7 @@ body {
   color: white;
   font-size: 110%;
   padding: 20px;
+  float: left;
 }
 
 #board {
@@ -69,17 +70,17 @@ body {
   width: 40%;
 }
 
-td {
+#board td {
   position: relative;
 }
 
-td:after {
+#board td:after {
   content: '';
   display: block;
   margin-top: 100%;
 }
 
-td .content {
+#board td .content {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -92,9 +93,34 @@ td .content {
   line-height: 90px;
 }
 
-.words {
+#words_form_container {
   margin: 40px 20px;
   float: right;
   width: 50%;
+}
+
+#words_text_area {
   font-size: 150%;
+}
+
+.submit_words_button {
+  margin: 5px 40px;
+}
+
+#validated_words_container {
+  padding: 40px 0px;
+}
+
+.valid_words_table_container, .invalid_words_table_container {
+  float: right;
+}
+
+#validated_words_table, #invalidated_words_table{
+  color: white;
+  font-size: 150%;
+}
+
+h1  {
+  color: white;
+  text-align: center;
 }

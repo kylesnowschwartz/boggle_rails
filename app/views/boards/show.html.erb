@@ -1,8 +1,11 @@
-<%= form_for :word, url: board_words_path(board_id: @board.id) do |f| %>
-  <%= f.text_area :words, size: "30x15", autofocus: true, class: "words"%>
-  <%= f.submit "Submit Words" %>
-<% end %>
+<h1> KLOGGLE </h1>
 
+<div id="words_form_container">
+  <%= form_for :word, url: board_words_path(board_id: @board.id) do |f| %>
+    <%= f.text_area :words, size: "35x16", autofocus: true, id: "words_text_area"%>
+    <%= f.submit "Submit Words", class: "submit_words_button" %>
+  <% end %>
+</div>
 
 <table id="board">
   <% @board.board.each do |row| %>
@@ -17,6 +20,42 @@
     </tr>
   <% end %>
 </table>
+
+<div id="validated_words_container">
+  <div class="valid_words_table_container">
+    <table id="validated_words_table">
+      <tr>
+        <td>
+          Valid Words
+        </td>
+      </tr>
+      <% @validated_words[:valid_words].each do |word| %>
+        <tr>
+          <td>
+            <%= word %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+  <div class="invalid_words_table_container">
+    <table id="invalidated_words_table">
+      <tr>
+        <td>
+          Invalid Words
+        </td>
+      </tr>
+      <% @validated_words[:invalid_words].each do |word| %>
+        <tr>
+          <td>
+            <%= word %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
 
 <div class='scoring_instructions'>
   <h2> How to Score your Words </h2>
