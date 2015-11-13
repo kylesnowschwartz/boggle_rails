@@ -1,5 +1,5 @@
 <%= form_for :word, url: board_words_path(board_id: @board.id) do |f| %>
-  <%= f.text_area :word, size: "30x15", autofocus: true, class: "words" %>
+  <%= f.text_area :words, size: "30x15", autofocus: true, class: "words"%>
   <%= f.submit "Submit Words" %>
 <% end %>
 

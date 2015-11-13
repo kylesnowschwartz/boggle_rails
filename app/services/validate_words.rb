@@ -1,5 +1,5 @@
 class ValidateWords
-  PATH = File.join(Rails.root, 'app', 'assets', 'words.txt')
+  PATH = File.join(Rails.root, 'app', 'assets', 'boggle_words.txt')
   DICTIONARY = File.readlines(PATH).map { |word| word.chomp }
 
   def initialize(words)

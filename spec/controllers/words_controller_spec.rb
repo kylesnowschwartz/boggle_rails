@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe WordsController, type: :controller do
   let(:board) { Board.create!}
   let(:word) { "toast" }
-  let(:valid_word_params) { { board_id: board.id, word: word } }
+  let(:valid_word_params) { { board_id: board.id, word: { words: word } } }
 
   before :each do
     Board.destroy_all
@@ -16,7 +16,7 @@ RSpec.describe WordsController, type: :controller do
     end
 
     it "creates a new word" do
-      expect(Word.find_by(valid_word_params)).to be_truthy
+      expect(board.words.pluck("word")).to include "TOAST" 
     end
   end
 end

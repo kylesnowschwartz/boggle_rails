@@ -7,6 +7,7 @@ class ParseWords
   def call
     split_words.
       map { |word| normalize_word(word) }.
+      select { |word| word != "" }.
       each { |word| Word.create!(board: @board, word: word) }
   end
 
