@@ -4,12 +4,14 @@ class Board < ActiveRecord::Base
   def board
     board = []
 
-    a = qs_to_qus(letters)
+    letters_with_qus = qs_to_qus(letters)
     
-    4.times { board << a.shift(4) }
+    4.times { board << letters_with_qus.shift(4) }
     
     board
   end
+
+  private
 
   def qs_to_qus(string)
     string.chars.map{ |letter| letter == "Q" ? "Qu" : letter }
