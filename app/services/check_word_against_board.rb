@@ -21,25 +21,7 @@ class CheckWordAgainstBoard
   end
 
   def check_whole_board(word)
-    @grid ||= @board.board
-    @letters ||= @word.word.chars
-    @letters_to_check = @letters.dup
-    @current_path = []
-    @checked_letters = []
-
-    @letters.each do |letter| # for each letter in the word
-      POSITIONS.each do |position| # look through all the cells of the grid for the letter
-        row, col = position[0], position[1]
-        
-        @current_path += position
-
-        if @grid[row][col] == letter # if you found the letter
-          until check_neighbors_for_letter(@current_path.last, @letters_to_check.first).empty?# check that positions neighbors for the next letter
-            check_neighbors_for_letter(@current_path.last, @letters_to_check.first)
-          end
-        end
-      end
-    end
+    board = @board.board
     # TODO
     # for each cell in the board 
       # check if that cell contains the first letter
@@ -47,25 +29,8 @@ class CheckWordAgainstBoard
       # check at each neighboring position to see if what's there is equal to the next letter in the word
         # if it is? move to that position, subtract from the positions to check where we just came from, and then check it's neighbors for the next letter in the word... repeat
         # if it's not? remove that position from the positions to check
-    @checked_letters.join == @word.word
   end
 
-  def check_neighbors_for_letter(position, letter)
-    @current_path << position # mark where you found it
-    neighbors_to_check = neighbors(position) - @current_path
-    neighbors_containing_letter = []
-
-    neighbors_to_check.each do |neighbor|
-      p @grid[neighbor[0]][neighbor[1]]
-      if @grid[neighbor[0]][neighbor[1]] == letter
-        @checked_letters << @letters_to_check.shift # take off that letter from the letters to check
-
-        neighbors_containing_letter << neighbor
-      end
-    end
-
-    neighbors_containing_letter
-  end
 
   def neighbors(position)
     x_pos = position[0]
@@ -82,19 +47,6 @@ class CheckWordAgainstBoard
     end
 
     neighboring_coordinates.uniq - [position]
-  end
-
-  def positions_to_check(word)
-    pos_to_check = []
-    letter_to_check = word.chars.first
-
-    POSITIONS.each do |pos|
-      if @grid[pos[0]][pos[1]] == letter_to_check
-        pos_to_check << pos
-      end
-    end
-
-    pos_to_check
   end
 
   def check_horizontal(word)
