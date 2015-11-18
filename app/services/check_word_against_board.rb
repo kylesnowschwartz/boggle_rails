@@ -20,6 +20,83 @@ class CheckWordAgainstBoard
     end
   end
 
+  def check_whole_board(word)
+    @grid ||= @board.board
+    @letters ||= @word.word.chars
+    @letters_to_check = @letters.dup
+    @current_path = []
+    @checked_letters = []
+
+    @letters.each do |letter| # for each letter in the word
+      POSITIONS.each do |position| # look through all the cells of the grid for the letter
+        row, col = position[0], position[1]
+        
+        @current_path += position
+
+        if @grid[row][col] == letter # if you found the letter
+          until check_neighbors_for_letter(@current_path.last, @letters_to_check.first).empty?# check that positions neighbors for the next letter
+            check_neighbors_for_letter(@current_path.last, @letters_to_check.first)
+          end
+        end
+      end
+    end
+    # TODO
+    # for each cell in the board 
+      # check if that cell contains the first letter
+    # for all of the neighboring positions
+      # check at each neighboring position to see if what's there is equal to the next letter in the word
+        # if it is? move to that position, subtract from the positions to check where we just came from, and then check it's neighbors for the next letter in the word... repeat
+        # if it's not? remove that position from the positions to check
+    @checked_letters.join == @word.word
+  end
+
+  def check_neighbors_for_letter(position, letter)
+    @current_path << position # mark where you found it
+    neighbors_to_check = neighbors(position) - @current_path
+    neighbors_containing_letter = []
+
+    neighbors_to_check.each do |neighbor|
+      p @grid[neighbor[0]][neighbor[1]]
+      if @grid[neighbor[0]][neighbor[1]] == letter
+        @checked_letters << @letters_to_check.shift # take off that letter from the letters to check
+
+        neighbors_containing_letter << neighbor
+      end
+    end
+
+    neighbors_containing_letter
+  end
+
+  def neighbors(position)
+    x_pos = position[0]
+    y_pos = position[1]
+    
+    neighboring_coordinates = []
+
+    (-1..1).each do |i|
+      neighboring_coordinates << [(x_pos + i).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
+      neighboring_coordinates << [(x_pos).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
+      neighboring_coordinates << [(x_pos + i).abs, (y_pos).abs].map { |n| n < 4 ? n : 3 }
+      neighboring_coordinates << [(x_pos + i).abs, (y_pos - i).abs].map { |n| n < 4 ? n : 3 }
+      neighboring_coordinates << [(x_pos - i).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
+    end
+
+    neighboring_coordinates.uniq - [position]
+  end
+
+  def positions_to_check(word)
+    pos_to_check = []
+    letter_to_check = word.chars.first
+
+    POSITIONS.each do |pos|
+      if @grid[pos[0]][pos[1]] == letter_to_check
+        pos_to_check << pos
+      end
+    end
+
+    pos_to_check
+  end
+
   def check_horizontal(word)
     n = 0
     4.times do
@@ -39,153 +116,36 @@ class CheckWordAgainstBoard
   def transpose_board
     @board.board.transpose
   end
-
-  def check_whole_board(word)
-    grid ||= @board.board
-    letters ||= word.chars
-    positions_to_check = []
-    letter_to_check = letters.shift
-    # TODO
-    # for each cell in the board 
-      # find all the positions of the board which contain the first letter of the word to check
-    POSITIONS.each do |pos|
-      if grid[pos[0]][pos[1]] == letter_to_check
-        positions_to_check << pos
-      end
-    end
-
-    positions_to_check.each do |pos|
-      neighbors_to_check = neighbors(pos) - checked_neighbors
-    end
-    # for all of the neighboring positions of that first letter inside the constraints of the board
-      # check at each neighboring position to see if what's there is equal to the next letter in the word
-        # if it is? move to that position, subtract from the positions to check where we just came from, and then check it's neighbors for the next letter in the word... repeat
-        # if it's not? remove that position from the positions to check
-  end
-
-  def neighbors(x_pos, y_pos)
-    grid = @board.board
-    coordinates = []
-
-    (-1..1).each do |cell|
-
-    end
-  end
-
-  def check_letter_for_neighbor(letter, neighbor)
-    grid = @board.board
-
-    grid.each do |row|
-      if row.include?(letter)
-        index_of_row = grid.index(row)
-        col = row.index(letter)
-        
-        [ 
-          grid[index_of_row+1][col], 
-          grid[index_of_row+1][col+1], 
-          grid[index_of_row][col+1], 
-          grid[index_of_row-1][col+1], 
-          grid[index_of_row-1][col], 
-          grid[index_of_row][col-1], 
-          grid[index_of_row+1][col-1], 
-          grid[index_of_row-1][col-1] 
-        ].include?(neighbor)
-        # TODO maybe a grid class has a row and a column class, and these rows and columns have methods like #next_row and #top_right_neighbor
-      end
-    end
-  end
 end
 
-class Grid
-  attr_reader :cells
+# class Grid
+#   attr_reader :cells
 
-  def initialize(board)
-    @board = board
-    @cells = []
-  end
+#   def initialize(board)
+#     @board = board
+#     @cells = []
+#   end
 
-  def populate_cells
-    @board.board.each do |row|
-      index_of_row = @board.board.index(row)
+#   def populate_cells
+#     @board.board.each do |row|
+#       index_of_row = @board.board.index(row)
 
-      row.each do |cell|
-        index_of_col = row.index(cell)
+#       row.each do |cell|
+#         index_of_col = row.index(cell)
 
-        @cells << Cell.new(index_of_row, index_of_col)
-      end
-    end
-  end
-end
-
-class Cell
-  attr_reader :x_pos, :y_pos
-
-
-  def initialize(x_pos, y_pos)
-    @x_pos = x_pos
-    @y_pos = y_pos
-  end
-  # grid[index_of_row-1][col+1], 
-  # grid[index_of_row-1][col], 
-  # grid[index_of_row][col-1], 
-  # grid[index_of_row+1][col-1], 
-  # grid[index_of_row-1][col-1] 
-  def bottom_neighbor
-     [(@x_pos + 1) , @y_pos] if (@x_pos + 1).between?(X_MIN, X_MAX)
-  end
-
-  def bottom_right_neighbor
-     [@x_pos , (@y_pos + 1)] if (@y_pos + 1).between?(Y_MIN, Y_MAX)
-  end
-
-  def right_neighbor
-     [@x_pos , (@y_pos + 1)] if (@y_pos + 1).between?(Y_MIN, Y_MAX)
-  end
-
-  def top_right_neighbor
-     [(@x_pos - 1) , (@y_pos + 1] if (@x_pos + 1).between?(X_MIN, X_MAX) && (@y_pos + 1).between?(Y_MIN, Y_MAX)
-  end
-
-  def bottom_neighbor
-     [(@x_pos + 1) , @y_pos] if (@x_pos + 1).between?(X_MIN, X_MAX)
-  end
-
-  def bottom_neighbor
-     [(@x_pos + 1) , @y_pos] if (@x_pos + 1).between?(X_MIN, X_MAX)
-  end
-
-  def bottom_neighbor
-     [(@x_pos + 1) , @y_pos] if (@x_pos + 1).between?(X_MIN, X_MAX)
-  end
-
-  def bottom_neighbor
-     [(@x_pos + 1) , @y_pos] if (@x_pos + 1).between?(X_MIN, X_MAX)
-  end
-end
-
-# def check_whole_board(word)
-#   grid ||= @board.board
-#   letters = word.chars
-#   array_of_truth = []
-  
-#   letters.each do |letter|
-#     grid.each do |row|
-#       index_of_row = grid.index(row)
-#       index_in_letters = letters.index(letter)
-
-#       if row.join.include?(letter)
-#         col = row.index(letter)
-
-#         if [grid[index_of_row+1][col], grid[index_of_row+1][col+1], grid[index_of_row][col+1], grid[index_of_row-1][col+1], grid[index_of_row-1][col], grid[index_of_row][col-1], grid[index_of_row+1][col-1], grid[index_of_row-1][col-1]].include?(letters[index_in_letters + 1])
-          
-#           array_of_truth.push(true)
-#           p "array of truth #{array_of_truth}"
-#         end
+#         @cells << Cell.new(index_of_row, index_of_col)
 #       end
 #     end
 #   end
+# end
 
-#   array_of_truth.length == letters.length
+# class Cell
+#   attr_reader :x_pos, :y_pos
+
+#   def initialize(x_pos, y_pos)
+#     @x_pos = x_pos
+#     @y_pos = y_pos
+#   end
 # end
 
 
