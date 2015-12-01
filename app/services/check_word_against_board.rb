@@ -100,4 +100,11 @@ end
 #   end
 # end
 
-
+  # horizontal_words = [
+  #   "LUCK",
+  #   "SKIL",
+  #   "LIMB",
+  #   "RIMS"
+  # ]
+  
+  # check = CheckWordAgainstBoard.new("LIMBS", horizontal_words) 
