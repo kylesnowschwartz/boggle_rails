@@ -26,11 +26,6 @@ RSpec.describe CheckWordAgainstBoard do
     "LKRS"
   ]
 
-  # P E E L
-  # I R K S
-  # E R R D
-  # S C U M
-
   describe "check horizontal words" do
     HORIZONTAL_WORDS.each do |word_to_check|
       let (:letters) { "LUCKSKILLIMBRIMS"}
