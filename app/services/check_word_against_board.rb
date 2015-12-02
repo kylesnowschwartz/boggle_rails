@@ -35,7 +35,7 @@ class CheckWordAgainstBoard
 
   def breadth_first_search(graph, board, word)
     board.map.with_index do |letter, index|
-      if letter == word.chars.first
+      if letter == first_letter(word)
         bfs_info = setup_bfs_info(graph, board, word, index)
         queue = []
         queue << index
@@ -44,15 +44,17 @@ class CheckWordAgainstBoard
           current_vertex = queue.shift
 
           graph[current_vertex].each do |neighbor|
-            if bfs_info[neighbor][:distance] == nil && word.chars[bfs_info[current_vertex][:distance] + 1] == board[neighbor] 
-              bfs_info[neighbor][:distance] = bfs_info[current_vertex][:distance] + 1
+            if not_seen_before?(bfs_info, neighbor) && matching_letters?(word, bfs_info, board, current_vertex, neighbor)
+              
+              increment_distance(bfs_info, neighbor, current_vertex)
+
               bfs_info[neighbor][:letter] = board[neighbor]
               
               bfs_info[neighbor][:predecessor] = current_vertex
 
               queue << neighbor
 
-              return map_backwords(bfs_info, word, board) if bfs_info[neighbor][:distance] == (word.size - 1)
+              return trace_backwards_to_word(bfs_info, word, board) if bfs_info[neighbor][:distance] == (word.size - 1)
             end
           end
         end
@@ -61,7 +63,23 @@ class CheckWordAgainstBoard
     false
   end
 
-  def map_backwords(info, word, board)
+  def first_letter(word)
+    word.chars.first
+  end
+
+  def increment_distance(bfs_info, neighbor, current_vertex)
+    bfs_info[neighbor][:distance] = bfs_info[current_vertex][:distance] + 1
+  end
+
+  def not_seen_before?(bfs_info, neighbor)
+    bfs_info[neighbor][:distance] == nil
+  end
+
+  def matching_letters?(word, bfs_info, board, current_vertex, neighbor)
+    word.chars[bfs_info[current_vertex][:distance] + 1] == board[neighbor]
+  end
+
+  def trace_backwards_to_word(info, word, board)
     letters = []
 
     word.size.times do |i|
@@ -69,6 +87,7 @@ class CheckWordAgainstBoard
       last_letter_index = last_letter[0][:index]
       letters.unshift(board[last_letter_index])
     end
+
     letters.join
   end
 
