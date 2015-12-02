@@ -1,110 +1,133 @@
+require 'pp'
+
 class CheckWordAgainstBoard
-  POSITIONS = [
-    [0,0], [0,1], [0,2], [0,3],
-    [1,0], [1,1], [1,2], [1,3],
-    [2,0], [2,1], [2,2], [2,3],
-    [3,0], [3,1], [3,2], [3,3],
-  ]
-  X_MIN, Y_MIN = 0, 0
-  X_MAX, Y_MAX = POSITIONS.length, POSITIONS.length
+end
   
-  def initialize(word, board)
-    @word = word
-    @board = board
-  end
+  POSITIONS_TO_COORDINATES = {
+    0 => [0,0],  
+    1 => [0,1],  
+    2 => [0,2],  
+    3 => [0,3],
+    4 => [1,0],  
+    5 => [1,1],  
+    6 => [1,2],  
+    7 => [1,3],
+    8 => [2,0],  
+    9 => [2,1], 
+    10 => [2,2], 
+    11 => [2,3],
+    12 => [3,0], 
+    13 => [3,1], 
+    14 => [3,2], 
+    15 => [3,3]
+  }
+  
+ADJACENCY_LIST = [
+  [1, 4, 5],
+  [2, 6, 5, 4, 0],
+  [3, 7, 6, 5, 1],
+  [7, 6, 2],
+  [0, 1, 5, 9, 8],
+  [0, 1, 2, 6, 10, 9, 8, 4],
+  [1, 2, 3, 7, 11, 10, 9, 5],
+  [3, 2, 6, 10, 11],
+  [4, 5, 9, 13, 12],
+  [4, 5, 6, 10, 14, 13, 12, 8],
+  [5, 6, 7, 11, 15, 14, 13, 9],
+  [7, 6, 10, 14, 15],
+  [8, 9, 13],
+  [8, 9, 10, 14, 12],
+  [13, 9, 10, 11, 15],
+  [11, 10, 14]
+]
 
-  def call
-    if @word.length <= 4
-      check_horizontal(@word)
-      check_vertical(@word)
+def breadth_first_search(graph, board, word)
+  board.map.with_index do |letter, index|
+    if letter == word.chars.first
+      bfs_info = setup_bfs_info(graph, board, word, index)
+      queue = []
+      queue << index
+
+      while queue.any?
+        current_vertex = queue.shift
+
+        graph[current_vertex].each do |neighbor|
+          if bfs_info[neighbor][:distance] == nil && word.chars[bfs_info[current_vertex][:distance] + 1] == board[neighbor] 
+            bfs_info[neighbor][:distance] = bfs_info[current_vertex][:distance] + 1
+            bfs_info[neighbor][:letter] = board[neighbor]
+            
+            bfs_info[neighbor][:predecessor] = current_vertex
+
+            queue << neighbor
+
+            return bfs_info if bfs_info[neighbor][:distance] == (word.size - 1)
+          end
+        end
+      end
+    bfs_info
     end
-  end
-
-  def check_whole_board(word)
-    board = @board.board
-    # TODO
-    # for each cell in the board 
-      # check if that cell contains the first letter
-    # for all of the neighboring positions
-      # check at each neighboring position to see if what's there is equal to the next letter in the word
-        # if it is? move to that position, subtract from the positions to check where we just came from, and then check it's neighbors for the next letter in the word... repeat
-        # if it's not? remove that position from the positions to check
-  end
-
-
-  def neighbors(position)
-    x_pos = position[0]
-    y_pos = position[1]
-    
-    neighboring_coordinates = []
-
-    (-1..1).each do |i|
-      neighboring_coordinates << [(x_pos + i).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
-      neighboring_coordinates << [(x_pos).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
-      neighboring_coordinates << [(x_pos + i).abs, (y_pos).abs].map { |n| n < 4 ? n : 3 }
-      neighboring_coordinates << [(x_pos + i).abs, (y_pos - i).abs].map { |n| n < 4 ? n : 3 }
-      neighboring_coordinates << [(x_pos - i).abs, (y_pos + i).abs].map { |n| n < 4 ? n : 3 }
-    end
-
-    neighboring_coordinates.uniq - [position]
-  end
-
-  def check_horizontal(word)
-    n = 0
-    4.times do
-      return true if @board.board[n].join.include?(word)
-      n += 1
-    end
-  end
-
-  def check_vertical(word)
-    n = 0
-    4.times do
-      return true if transpose_board[n].join.include?(word)
-      n += 1
-    end
-  end
-
-  def transpose_board
-    @board.board.transpose
   end
 end
 
-# class Grid
-#   attr_reader :cells
+# TODO try mapping backwards
+def map_backwords(info, word)
+  word.size.times do |i|
+    info.select { |datapoint| datapoint[:distance] == word.size - i }
+  end
+end
 
-#   def initialize(board)
-#     @board = board
-#     @cells = []
-#   end
+def setup_bfs_info(graph, board, word, source_vertex)
+  bfs_info = []
+  graph.length.times { |i| bfs_info[i] = {index: i, distance: nil, predecessor: nil, letter: nil} }
+  bfs_info[source_vertex][:distance] = 0
+  bfs_info[source_vertex][:letter] = word.chars.first
+  bfs_info
+end
 
-#   def populate_cells
-#     @board.board.each do |row|
-#       index_of_row = @board.board.index(row)
+def recursive_check(board, letters_to_check, indices_seen)
+  if letters_to_check.empty?
+    p "found a path"
+  end
+  return true if letters_to_check == []
 
-#       row.each do |cell|
-#         index_of_col = row.index(cell)
+  board.each_with_index do |cell, index|
+    if cell == letters_to_check.first && not_seen && adjacent
+      remaining_letters = letters_to_check.dup
+      remaining_letters.shift
+      # p '-' * 20
+      # p remaining_letters
+      recursive_check(board, remaining_letters)
+    end
+  end
 
-#         @cells << Cell.new(index_of_row, index_of_col)
-#       end
-#     end
-#   end
-# end
+  false
+end
 
-# class Cell
-#   attr_reader :x_pos, :y_pos
+word = "LIMBS"
+board = "LUCKSKILLIMBRIMS".chars
 
-#   def initialize(x_pos, y_pos)
-#     @x_pos = x_pos
-#     @y_pos = y_pos
-#   end
-# end
+# pp recursive_check(board, word)
+# LUCK
+# SKIL
+# LIMB
+# RIMS
 
-  # horizontal_words = [
-  #   "LUCK",
-  #   "SKIL",
-  #   "LIMB",
-  #   "RIMS"
-  # ]
-  
-  # check = CheckWordAgainstBoard.new("LIMBS", horizontal_words) 
+bfs = breadth_first_search(ADJACENCY_LIST, board, word)
+pp bfs
+
+# bfs = [{:distance=>2, :preceeding_letter=>"S"},
+#  {:distance=>2, :preceeding_letter=>"S"},
+#  {:distance=>2, :preceeding_letter=>"K"},
+#  {:distance=>3, :preceeding_letter=>"C"},
+#  {:distance=>1, :preceeding_letter=>"L"},
+#  {:distance=>1, :preceeding_letter=>"L"},
+#  {:distance=>2, :preceeding_letter=>"K"},
+#  {:distance=>3, :preceeding_letter=>"C"},
+#  {:distance=>0, :preceeding_letter=>nil},
+#  {:distance=>1, :preceeding_letter=>"L"},
+#  {:distance=>2, :preceeding_letter=>"K"},
+#  {:distance=>3, :preceeding_letter=>"I"},
+#  {:distance=>1, :preceeding_letter=>"L"},
+#  {:distance=>1, :preceeding_letter=>"L"},
+#  {:distance=>2, :preceeding_letter=>"I"},
+#  {:distance=>3, :preceeding_letter=>"M"}]
