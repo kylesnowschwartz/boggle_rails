@@ -1,9 +1,12 @@
 class ValidateWords
+  attr_reader :words, :board
+
   PATH = File.join(Rails.root, 'app', 'assets', 'boggle_words.txt')
   DICTIONARY = File.readlines(PATH).map { |word| word.chomp }
 
-  def initialize(words)
+  def initialize(words, board)
     @words = words
+    @board = board.letters
   end
 
   def call
@@ -12,9 +15,13 @@ class ValidateWords
       invalid_words: []
     }
     
-    @words
-      .pluck("word")
-      .each { |word| DICTIONARY.include?(word) ? validated_words[:valid_words] << word : validated_words[:invalid_words] << word}
+    words.pluck("word").each do |word| 
+      if DICTIONARY.include?(word) && CheckWordAgainstBoard.new(word, board).call 
+        validated_words[:valid_words] << word
+      else 
+        validated_words[:invalid_words] << word
+      end
+    end
 
     validated_words
   end
