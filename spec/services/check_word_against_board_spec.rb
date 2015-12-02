@@ -1,12 +1,7 @@
 require 'rails_helper'
 
-def transpose_board(board)
-  board.map { |row| row.chars }.transpose.map{ |row| row.join }
-end
-
 RSpec.describe CheckWordAgainstBoard do
   let(:board) { Board.create!(letters: letters) }
-  # let(:word) { Word.create!(word: "LUCK", board_id: board.id) }
   subject { CheckWordAgainstBoard.new(word, board) }
 
   HORIZONTAL_WORDS = [
@@ -24,42 +19,68 @@ RSpec.describe CheckWordAgainstBoard do
   ]
 
   TWO_DIMENSIONAL_WORDS = [
-    # "LEER",
-    "LEEKS"
-    # "RIPE"
+    "LEER",
+    "LEEKS",
+    "RIPE",
+    "PRRM",
+    "LKRS"
   ]
 
-  describe "#check_horizontal" do
-    HORIZONTAL_WORDS.each do |row|
+  # P E E L
+  # I R K S
+  # E R R D
+  # S C U M
+
+  describe "check horizontal words" do
+    HORIZONTAL_WORDS.each do |word_to_check|
       let (:letters) { "LUCKSKILLIMBRIMS"}
-      let(:word) { Word.create!(word: row, board_id: board.id) }
-    
-      it "checks a horizontal word #{row} is in the board" do
-        expect(subject.check_horizontal(word.word)).to be true
+
+      it "checks that a word #{word_to_check} is in the board" do
+        w = Word.create!(word: word_to_check, board_id: board.id)
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to eq w.word
       end
     end
   end
 
-  describe "#check_vertical" do
-    transpose_board(VERTICAL_WORDS).each do |col|
-    let(:letters) { "PEELIRKSERRDSCUM" }
-    let(:word) { Word.create!(word: col, board_id: board.id) }
-
-
-      it "checks that a vertical word #{col} is in the board" do
-        expect(subject.check_vertical(word.word)).to be true
-      end
-    end
-  end
-
-  describe "#check_whole_board" do
-    TWO_DIMENSIONAL_WORDS.each do |word_to_check|
+  describe "check vertical words" do
+    VERTICAL_WORDS.each do |word_to_check|
       let(:letters) { "PEELIRKSERRDSCUM" }
 
       it "checks that a word #{word_to_check} is in the board" do
         w = Word.create!(word: word_to_check, board_id: board.id)
-        s = CheckWordAgainstBoard.new(w, board)
-        expect(s.check_whole_board(w.word)).to be true
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to eq w.word
+      end
+    end
+  end
+
+  describe "check for two dimensional words" do
+    context "these words are in the board" do
+      TWO_DIMENSIONAL_WORDS.each do |word_to_check|
+        let(:letters) { "PEELIRKSERRDSCUM" }
+
+        it "checks that a word #{word_to_check} is in the board" do
+          w = Word.create!(word: word_to_check, board_id: board.id)
+          s = CheckWordAgainstBoard.new(w.word, board.letters)
+          expect(s.call).to eq w.word
+        end
+      end
+    end
+
+    context "these words are NOT in the board" do
+      let(:letters) { "PEELIRKSERRDSCUM" }
+
+      it "checks that WRONG is NOT in the board" do
+        w = Word.create!(word: "WRONG", board_id: board.id)
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to be false
+      end
+
+      it "checks that 1234 is NOT in the board" do
+        w = Word.create!(word: "1234", board_id: board.id)
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to be false
       end
     end
   end
