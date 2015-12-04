@@ -69,13 +69,13 @@ RSpec.describe CheckWordAgainstBoard do
       it "checks that WRONG is NOT in the board" do
         w = Word.create!(word: "WRONG", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board.letters)
-        expect(s.call).to be false
+        expect(s.call).to be nil
       end
 
       it "checks that 1234 is NOT in the board" do
         w = Word.create!(word: "1234", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board.letters)
-        expect(s.call).to be false
+        expect(s.call).to be nil
       end
     end
   end
