@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ParseWords, type: :service do
-  let(:board) { Board.create! }
+  let(:board) { CreateBoard.new.call }
   let(:words) { "asdf \n game\r     blerp1" }
   subject { ParseWords.new(words, board) }
 

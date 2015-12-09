@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe WordsController, type: :controller do
-  let(:board) { Board.create!}
+  let(:board) { CreateBoard.new.call}
   let(:word) { "toast" }
   let(:valid_word_params) { { board_id: board.id, word: { words: word } } }
 
