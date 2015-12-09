@@ -17,7 +17,7 @@ class ValidateWords
     
     words.pluck("word").each do |word| 
       if DICTIONARY.include?(word) && CheckWordAgainstBoard.new(word, board_letters).call 
-        validated_words[:valid_words] << (word + " " + ScoreWord.new(word).call.to_s)
+        validated_words[:valid_words] << word
       else 
         validated_words[:invalid_words] << word
       end

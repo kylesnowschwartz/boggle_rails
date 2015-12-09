@@ -103,6 +103,7 @@ class CheckWordAgainstBoard
   def trace_backwards_to_word(path)
     entry = path.select { |cell_info| cell_info[:distance] == word.size - 1 }.first
     trace = [entry]
+    
     while entry[:preceding].present?
       previous_entry = path[entry[:preceding]]
       trace << previous_entry
