@@ -1,6 +1,3 @@
-require 'pp'
-require 'byebug'
-
 class CheckWordAgainstBoard
   attr_reader :word, :board_chars, :adjacency_list, :indicies_to_check, :bfs_info
   def initialize(word, board)
@@ -44,13 +41,13 @@ class CheckWordAgainstBoard
       @current_path = copy_bfs(current_bfs)
 
       if not_seen_before?(neighbor) && neighbor_matches_next_letter?(neighbor, current_vertex)
-        @current_path[neighbor][:preceding] = current_vertex
-
-        @current_path[neighbor][:index] = neighbor
-
         increment_distance(neighbor, current_vertex)
 
         record_letter(neighbor)
+        
+        @current_path[neighbor][:preceding] = current_vertex
+
+        @current_path[neighbor][:index] = neighbor
         
         indicies_to_check << [neighbor, @current_path]
 
@@ -87,8 +84,11 @@ class CheckWordAgainstBoard
 
   def neighbor_matches_next_letter?(cell_id, current_vertex)
     current_letter_in_word = word.chars[@current_path[current_vertex][:distance]] 
-    next_letter_in_word = word.chars[@current_path[current_vertex][:distance] + 1] 
+    
     neighbor_being_checked = board_chars[cell_id]
+
+    next_letter_in_word = word.chars[@current_path[current_vertex][:distance] + 1] 
+    
     next_next_letter = word.chars[@current_path[current_vertex][:distance] + 2] 
 
     if current_letter_in_word == "Q" && next_letter_in_word == "U" && neighbor_being_checked != "U"

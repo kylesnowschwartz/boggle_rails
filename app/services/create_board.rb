@@ -6,9 +6,6 @@ class CreateBoard
     "EEGHNW", "AFFKPS", "HLNNRZ", "DEILRX"
   ]
 
-  def initialize
-  end
-
   def call
     shake!
     Board.create!(letters: @letters)
