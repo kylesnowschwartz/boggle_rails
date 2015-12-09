@@ -4,21 +4,24 @@ RSpec.describe CheckWordAgainstBoard do
   let(:board) { Board.create!(letters: letters) }
   subject { CheckWordAgainstBoard.new(word, board) }
 
-  HORIZONTAL_WORDS = [
+  WORDS_IN_BOARD_ONE = [
     "LUCK",
     "SKIL",
     "LIMB",
-    "RIMS"
+    "RIMS",
+    "LUCKLIK",
+    "LUCKLIKSLIMBSMIR"
   ]
 
-  VERTICAL_WORDS = [
+  WORDS_IN_BOARD_TWO = [
     "PEEL",
     "IRKS",
     "ERRD",
-    "SCUM"
+    "SCUM",
+    "PEELSKRIERRDMUCS"
   ]
 
-  TWO_DIMENSIONAL_WORDS = [
+  WORDS_IN_BOARD_THREE = [
     "LEER",
     "LEEKS",
     "RIPE",
@@ -26,8 +29,22 @@ RSpec.describe CheckWordAgainstBoard do
     "LKRS"
   ]
 
-  describe "check horizontal words" do
-    HORIZONTAL_WORDS.each do |word_to_check|
+  WORDS_IN_BOARD_FOUR = [
+    "QUEEN",
+    "QUIZ",
+    "IQUEEN",
+    "IQUIZ",
+    "AZCDHGIZQIKNEEUM"
+  ] 
+
+# LUCK
+# SKIL
+# LIMB
+# RIMS
+  
+
+  describe "board one" do
+    WORDS_IN_BOARD_ONE.each do |word_to_check|
       let (:letters) { "LUCKSKILLIMBRIMS"}
 
       it "checks that a word #{word_to_check} is in the board" do
@@ -38,9 +55,21 @@ RSpec.describe CheckWordAgainstBoard do
     end
   end
 
-  describe "check vertical words" do
-    VERTICAL_WORDS.each do |word_to_check|
+  describe "board two" do
+    WORDS_IN_BOARD_TWO.each do |word_to_check|
       let(:letters) { "PEELIRKSERRDSCUM" }
+
+      it "checks that a word #{word_to_check} is in the board" do
+        w = Word.create!(word: word_to_check, board_id: board.id)
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to eq w.word
+      end
+    end
+  end
+
+  describe "check board with 'Q' words" do
+    WORDS_IN_BOARD_FOUR.each do |word_to_check|
+      let(:letters) { "AZCDZIGHQIKNMUEE" }
 
       it "checks that a word #{word_to_check} is in the board" do
         w = Word.create!(word: word_to_check, board_id: board.id)
@@ -52,7 +81,7 @@ RSpec.describe CheckWordAgainstBoard do
 
   describe "check for two dimensional words" do
     context "these words are in the board" do
-      TWO_DIMENSIONAL_WORDS.each do |word_to_check|
+      WORDS_IN_BOARD_THREE.each do |word_to_check|
         let(:letters) { "PEELIRKSERRDSCUM" }
 
         it "checks that a word #{word_to_check} is in the board" do
@@ -68,6 +97,12 @@ RSpec.describe CheckWordAgainstBoard do
 
       it "checks that WRONG is NOT in the board" do
         w = Word.create!(word: "WRONG", board_id: board.id)
+        s = CheckWordAgainstBoard.new(w.word, board.letters)
+        expect(s.call).to be nil
+      end
+
+      it "checks that 4 disconnected letters is NOT in the board" do
+        w = Word.create!(word: "PMEU", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board.letters)
         expect(s.call).to be nil
       end

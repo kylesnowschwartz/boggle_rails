@@ -8,7 +8,7 @@
 </div>
 
   <table id="board">
-    <% @board.board.each do |row| %>
+    <% @board.gridify_board.each do |row| %>
       <tr>
         <% row.each do |letter| %>
             <td>
