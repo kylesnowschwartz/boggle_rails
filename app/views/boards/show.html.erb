@@ -39,22 +39,28 @@
       </table>
     </div>  
 
-  <div class="invalid_words_table_container">
-    <table id="invalidated_words_table">
-      <tr>
-        <td>
-          Invalid Words
-        </td>
-      </tr>
-      <% @validated_words[:invalid_words].each do |word| %>
+    <div class="invalid_words_table_container">
+      <table id="invalidated_words_table">
         <tr>
           <td>
-            <%= word %>
+            Invalid Words
           </td>
         </tr>
-      <% end %>
-    </table>
-  </div>
+        <% @validated_words[:invalid_words].each do |word| %>
+          <tr>
+            <td>
+              <%= word %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <div class="total_score_container">
+      <p>
+      Your Total Score: <%= @validated_words[:valid_words].map { |word| word.split(" ")[1].to_i }.reduce(:+) || 0 %>
+      </p>
+    </div>
 </div>
 
   <%= form_for :board, url: boards_path do |f| %>

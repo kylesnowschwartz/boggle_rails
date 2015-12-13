@@ -109,6 +109,8 @@ body {
 
 #validated_words_container {
   padding: 40px 0px;
+  color: white;
+  font-size: 150%;
 }
 
 .valid_words_table_container, .invalid_words_table_container {
@@ -116,8 +118,6 @@ body {
 }
 
 #validated_words_table, #invalidated_words_table{
-  color: white;
-  font-size: 150%;
 }
 
 h1  {
