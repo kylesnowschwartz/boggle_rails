@@ -9,6 +9,10 @@ class Board < ActiveRecord::Base
     end
   end
 
+  def boundary
+    Math.sqrt(letters.size).to_i
+  end
+
   private
 
   def qs_to_qus(array)

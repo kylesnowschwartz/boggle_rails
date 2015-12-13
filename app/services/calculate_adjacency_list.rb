@@ -1,9 +1,9 @@
 class CalculateAdjacencyList
-  attr_reader :size, :boundary
+  attr_reader :board_size, :boundary
 
-  def initialize(size)
-    @size = size
-    @boundary = Math.sqrt(size).to_i
+  def initialize(boundary)
+    @boundary = boundary
+    @board_size = boundary * boundary
   end
 
   def call
@@ -13,9 +13,10 @@ class CalculateAdjacencyList
   private
 
   def calculate_adjacency_list
-    size.times.map do |cell_id|
-      possible_neighbours(cell_id_to_coord(cell_id))
-        .map { |coordinate| coord_to_cell_id(coordinate) }.sort
+    board_size.times.map do |cell_id|
+      possible_neighbours(cell_id_to_coord(cell_id)).
+        map { |coordinate| coord_to_cell_id(coordinate) }.
+        sort
     end
   end
 

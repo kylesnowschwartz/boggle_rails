@@ -1,8 +1,8 @@
 class CheckWordAgainstBoard
   attr_reader :word, :board_chars, :adjacency_list, :indicies_to_check, :bfs_info
   def initialize(word, board)
-    @board_chars ||= board.chars
-    @adjacency_list ||= CalculateAdjacencyList.new(board_chars.length).call
+    @board_chars ||= board.letters.chars
+    @adjacency_list ||= CalculateAdjacencyList.new(board.boundary).call
     @word = word
     @indicies_to_check = []
     @bfs_info = []
@@ -25,10 +25,10 @@ class CheckWordAgainstBoard
 
         while indicies_to_check.any?
           current_vertex_and_bfs = indicies_to_check.shift
-          current_bfs = current_vertex_and_bfs[1]
+          current_bfs_info = current_vertex_and_bfs[1]
           current_vertex = current_vertex_and_bfs[0]
 
-          return word if process_neighbors_at_current_vertex(current_vertex, current_bfs) == word
+          return word if process_neighbors_at_current_vertex(current_vertex, current_bfs_info) == word
         end
       end
     end
@@ -36,19 +36,19 @@ class CheckWordAgainstBoard
     nil
   end
 
-  def process_neighbors_at_current_vertex(current_vertex, current_bfs)
+  def process_neighbors_at_current_vertex(current_vertex, current_bfs_info)
     adjacency_list[current_vertex].each do |neighbor|
-      @current_path = copy_bfs(current_bfs)
+      @current_path = copy_bfs(current_bfs_info)
 
       if not_seen_before?(neighbor) && neighbor_matches_next_letter?(neighbor, current_vertex)
         increment_distance(neighbor, current_vertex)
 
         record_letter(neighbor)
         
-        @current_path[neighbor][:preceding] = current_vertex
+        record_preceding_vertex(neighbor, current_vertex)
 
-        @current_path[neighbor][:index] = neighbor
-        
+        record_neighbor_index(neighbor)
+
         indicies_to_check << [neighbor, @current_path]
 
         if reached_word_end?(neighbor)
@@ -78,6 +78,14 @@ class CheckWordAgainstBoard
     @current_path[cell_id][:letter] = board_chars[cell_id]
   end
 
+  def record_preceding_vertex(neighbor, current_vertex)
+    @current_path[neighbor][:preceding] = current_vertex
+  end
+
+  def record_neighbor_index(neighbor)
+    @current_path[neighbor][:index] = neighbor
+  end
+
   def not_seen_before?(cell_id)
     @current_path[cell_id][:letter] == nil
   end
@@ -103,7 +111,7 @@ class CheckWordAgainstBoard
   def trace_backwards_to_word(path)
     entry = path.select { |cell_info| cell_info[:distance] == word.size - 1 }.first
     trace = [entry]
-    
+
     while entry[:preceding].present?
       previous_entry = path[entry[:preceding]]
       trace << previous_entry
