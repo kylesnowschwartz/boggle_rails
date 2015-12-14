@@ -7,23 +7,22 @@ class CreateBoard
   ]
 
   def call
-    shake!
-    Board.create!(letters: @letters)
+    Board.create!(letters: shaken_letters)
   end
 
-  def shake!
-    @letters = ""
+  private
 
-    randomly_ordered_die_array.each do |die|
-      @letters += roll_a_die(die)
-    end
+  def shaken_letters
+    randomly_ordered_dice.map do |die|
+      roll_a_die(die)
+    end.join
   end
 
-  def randomly_ordered_die_array
+  def randomly_ordered_dice
     DICE.shuffle
   end
 
   def roll_a_die(die)
-    die.split("").sample
+    die.chars.sample
   end
 end

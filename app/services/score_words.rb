@@ -8,7 +8,7 @@ class ScoreWords
   def call
     Word.transaction do
       board.words.each do |word|
-        word.update!(score: score_word(word)) if word.score.zero?
+        word.update!(score: score_word(word)) if word.score.nil?
       end
     end
   end

@@ -52,6 +52,7 @@ class CheckWordAgainstBoard
         indicies_to_check << [neighbor, @current_path]
 
         if reached_word_end?(neighbor)
+          # TODO remove the backtrace
           return trace_backwards_to_word(@current_path)
         end
       end
@@ -127,6 +128,7 @@ class CheckWordAgainstBoard
   end
 
   def setup_bfs_info(source_vertex)
+    # TODO struct here
     board_chars.length.times { |i| bfs_info[i] = {distance: nil, letter: nil, preceding: nil, index: nil} }
     bfs_info[source_vertex][:distance] = 0
     bfs_info[source_vertex][:letter] = first_letter

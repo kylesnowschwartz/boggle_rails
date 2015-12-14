@@ -1,25 +1,29 @@
+require 'thread'
 class ParseWords
   attr_reader :board, :words
+
   def initialize(words, board)
     @words = words
     @board = board
   end
 
   def call
-    Word.transaction do
-      # TODO does this need a transaction block?
+    # TODO lock/mutex seems complicated and requires a bunch of copy pasted code I don't understand, so ask about it
+    # Lock.aquire("create-words-lock") do
       split_words.
         map { |word| normalize_word(word) }.
-        select { |word| word != "" }.
-        each { |word| board.words.map(&:word).include?(word) ? nil : board.words.create!(word: word) }
-    end
+        reject { |word| word == "" }.
+        each do |word| 
+          board.words.create!(word: word) unless board.words.map(&:word).include?(word)
+        end
+    # end
   end
 
   def split_words
-    @words.split(/\s+/)
+    words.split(/\s+/)
   end
 
   def normalize_word(word)
-    word.upcase.gsub(/[^a-zA-Z]/, "")
+    word.upcase.gsub(/[^A-Z]/, "")
   end
 end

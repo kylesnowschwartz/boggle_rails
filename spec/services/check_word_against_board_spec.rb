@@ -35,19 +35,13 @@ RSpec.describe CheckWordAgainstBoard do
     "IQUEEN",
     "IQUIZ",
     "AZCDHGIZQIKNEEUM"
-  ] 
+  ]
 
-# LUCK
-# SKIL
-# LIMB
-# RIMS
-  
-
-  describe "board one" do
+  context "these words are in board one" do
     WORDS_IN_BOARD_ONE.each do |word_to_check|
       let (:letters) { "LUCKSKILLIMBRIMS"}
 
-      it "checks that a word #{word_to_check} is in the board" do
+      it "#{word_to_check}" do
         w = Word.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
@@ -55,11 +49,11 @@ RSpec.describe CheckWordAgainstBoard do
     end
   end
 
-  describe "board two" do
+  context "these words are in board two" do
     WORDS_IN_BOARD_TWO.each do |word_to_check|
       let(:letters) { "PEELIRKSERRDSCUM" }
 
-      it "checks that a word #{word_to_check} is in the board" do
+      it "#{word_to_check}" do
         w = Word.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
@@ -67,11 +61,11 @@ RSpec.describe CheckWordAgainstBoard do
     end
   end
 
-  describe "check board with 'Q' words" do
+  context "when board has 'Q' words" do
     WORDS_IN_BOARD_FOUR.each do |word_to_check|
       let(:letters) { "AZCDZIGHQIKNMUEE" }
 
-      it "checks that a word #{word_to_check} is in the board" do
+      it "#{word_to_check}" do
         w = Word.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
@@ -79,12 +73,12 @@ RSpec.describe CheckWordAgainstBoard do
     end
   end
 
-  describe "check for two dimensional words" do
+  context "when board has two dimensional words" do
     context "these words are in the board" do
       WORDS_IN_BOARD_THREE.each do |word_to_check|
         let(:letters) { "PEELIRKSERRDSCUM" }
 
-        it "checks that a word #{word_to_check} is in the board" do
+        it "#{word_to_check}" do
           w = Word.create!(word: word_to_check, board_id: board.id)
           s = CheckWordAgainstBoard.new(w.word, board)
           expect(s.call).to eq w.word

@@ -10,6 +10,7 @@ class ValidateWords
   end
 
   def call
+    # TODO make a struct for this
     validated_words = {
       valid_words: [],
       invalid_words: []
