@@ -15,8 +15,8 @@ class ValidateWords
       invalid_words: []
     }
     
-    words.pluck("word").each do |word| 
-      if DICTIONARY.include?(word) && CheckWordAgainstBoard.new(word, board).call 
+    words.each do |word| 
+      if DICTIONARY.include?(word.word) && CheckWordAgainstBoard.new(word.word, board).call 
         validated_words[:valid_words] << word
       else 
         validated_words[:invalid_words] << word

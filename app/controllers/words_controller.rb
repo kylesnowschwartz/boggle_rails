@@ -4,6 +4,8 @@ class WordsController < ApplicationController
     
     ParseWords.new(params[:word][:words], @board).call
 
+    ScoreWords.new(@board).call
+
     redirect_to @board
   end
 end
