@@ -4,7 +4,7 @@ RSpec.describe ValidateWords, type: :service do
   let (:letters) { "PEELIRKSERRDSCUM"}
   let(:board) { Board.create!(letters: letters) }
   let(:parser) { ParseWords.new(words, board).call }
-  subject { ValidateWords.new() }
+  subject { ValidateWords.new }
 
   describe "call" do
     before do
@@ -15,10 +15,9 @@ RSpec.describe ValidateWords, type: :service do
       let(:words) { "LEER" }
 
       it "validates a single valid word" do
-        expect(ValidateWords.new(board.words, board).call).to eq( {
-          valid_words: board.words.to_a,
-          invalid_words: []
-        })
+        expect(ValidateWords.new(board.submissions, board).call).to eq(
+          ValidateWords::ValidatedWords.new(board.submissions.to_a, [])
+        )
       end
     end
 
@@ -26,10 +25,9 @@ RSpec.describe ValidateWords, type: :service do
       let(:words) { "LEER RIPE LEEKS" }
 
       it "validates 3 valid words" do
-        expect(ValidateWords.new(board.words, board).call).to eq( {
-          valid_words: board.words.to_a,
-          invalid_words: []
-        })
+        expect(ValidateWords.new(board.submissions, board).call).to eq(
+          ValidateWords::ValidatedWords.new(board.submissions.to_a, [])
+        )
       end
     end
 
@@ -37,10 +35,9 @@ RSpec.describe ValidateWords, type: :service do
       let(:words) { "CLOWNZZZ" }
 
       it "validates a single invalid word" do
-        expect(ValidateWords.new(board.words, board).call).to eq( {
-          valid_words: [],
-          invalid_words: board.words.to_a
-        })
+        expect(ValidateWords.new(board.submissions, board).call).to eq(
+          ValidateWords::ValidatedWords.new([], board.submissions.to_a)
+        )
       end
     end
 
@@ -48,10 +45,9 @@ RSpec.describe ValidateWords, type: :service do
       let(:words) { "ASDF BLERG CLOWNZZZ" }
 
       it "validates multiple invalid words" do
-        expect(ValidateWords.new(board.words, board).call).to eq( {
-          valid_words: [],
-          invalid_words: board.words.to_a
-        })
+        expect(ValidateWords.new(board.submissions, board).call).to eq(
+          ValidateWords::ValidatedWords.new([], board.submissions.to_a)
+        )
       end
     end
   end

@@ -6,12 +6,12 @@ class ScoreWords
   end
 
   def call
-    Word.transaction do
-      board.words.each do |word|
-        word.update!(score: score_word(word)) if word.score.nil?
-      end
-    end
+    board.submissions.
+      select { |word| word.score.nil? }.
+      each { |word| word.update!(score: score_word(word)) }
   end
+
+  private
 
   def score_word(word)
     case word.length

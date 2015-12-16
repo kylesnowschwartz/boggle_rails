@@ -1,19 +1,21 @@
 class CheckWordAgainstBoard
   attr_reader :word, :board_chars, :adjacency_list, :indicies_to_check, :bfs_info
+
   def initialize(word, board)
-    @board_chars ||= board.letters.chars
-    @adjacency_list ||= CalculateAdjacencyList.new(board.boundary).call
+    @board_chars = board.letters.chars
+    @adjacency_list = CalculateAdjacencyList.new(board.width).call
     @word = word
     @indicies_to_check = []
     @bfs_info = []
   end
 
+  # TODO high level abstraction
   def call
     breadth_first_search(adjacency_list)
   end
 
   private
-
+  # TODO vertex or index, not both
   def breadth_first_search(adjacency_list)
     board_chars.each_with_index do |letter, index|
       indicies_to_check.clear
@@ -25,8 +27,8 @@ class CheckWordAgainstBoard
 
         while indicies_to_check.any?
           current_vertex_and_bfs = indicies_to_check.shift
-          current_bfs_info = current_vertex_and_bfs[1]
           current_vertex = current_vertex_and_bfs[0]
+          current_bfs_info = current_vertex_and_bfs[1]
 
           return word if process_neighbors_at_current_vertex(current_vertex, current_bfs_info) == word
         end

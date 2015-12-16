@@ -42,7 +42,7 @@ RSpec.describe CheckWordAgainstBoard do
       let (:letters) { "LUCKSKILLIMBRIMS"}
 
       it "#{word_to_check}" do
-        w = Word.create!(word: word_to_check, board_id: board.id)
+        w = Submission.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
       end
@@ -54,7 +54,7 @@ RSpec.describe CheckWordAgainstBoard do
       let(:letters) { "PEELIRKSERRDSCUM" }
 
       it "#{word_to_check}" do
-        w = Word.create!(word: word_to_check, board_id: board.id)
+        w = Submission.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
       end
@@ -66,7 +66,7 @@ RSpec.describe CheckWordAgainstBoard do
       let(:letters) { "AZCDZIGHQIKNMUEE" }
 
       it "#{word_to_check}" do
-        w = Word.create!(word: word_to_check, board_id: board.id)
+        w = Submission.create!(word: word_to_check, board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to eq w.word
       end
@@ -79,7 +79,7 @@ RSpec.describe CheckWordAgainstBoard do
         let(:letters) { "PEELIRKSERRDSCUM" }
 
         it "#{word_to_check}" do
-          w = Word.create!(word: word_to_check, board_id: board.id)
+          w = Submission.create!(word: word_to_check, board_id: board.id)
           s = CheckWordAgainstBoard.new(w.word, board)
           expect(s.call).to eq w.word
         end
@@ -90,19 +90,19 @@ RSpec.describe CheckWordAgainstBoard do
       let(:letters) { "PEELIRKSERRDSCUM" }
 
       it "checks that WRONG is NOT in the board" do
-        w = Word.create!(word: "WRONG", board_id: board.id)
+        w = Submission.create!(word: "WRONG", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to be nil
       end
 
       it "checks that 4 disconnected letters is NOT in the board" do
-        w = Word.create!(word: "PMEU", board_id: board.id)
+        w = Submission.create!(word: "PMEU", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to be nil
       end
 
       it "checks that 1234 is NOT in the board" do
-        w = Word.create!(word: "1234", board_id: board.id)
+        w = Submission.create!(word: "1234", board_id: board.id)
         s = CheckWordAgainstBoard.new(w.word, board)
         expect(s.call).to be nil
       end

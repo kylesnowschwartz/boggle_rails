@@ -1,4 +1,3 @@
-require 'thread'
 class ParseWords
   attr_reader :board, :words
 
@@ -8,22 +7,32 @@ class ParseWords
   end
 
   def call
-    # TODO lock/mutex seems complicated and requires a bunch of copy pasted code I don't understand, so ask about it
-    # Lock.aquire("create-words-lock") do
-      split_words.
-        map { |word| normalize_word(word) }.
-        reject { |word| word == "" }.
-        each do |word| 
-          board.words.create!(word: word) unless board.words.map(&:word).include?(word)
-        end
-    # end
+    board.with_lock do
+      normalized_words = normalize_words(split_words)
+
+      words_without_blanks = reject_blank_words(normalized_words)
+
+      filtered_words = filter_duplicate_words(words_without_blanks)
+      
+      filtered_words.each { |word| board.submissions.create!(word: word) }
+    end
+  end
+
+  private
+
+  def filter_duplicate_words(words_with_duplicates)
+    words_with_duplicates.select { |word| !board.submissions.map(&:word).include?(word)}
   end
 
   def split_words
     words.split(/\s+/)
   end
 
-  def normalize_word(word)
-    word.upcase.gsub(/[^A-Z]/, "")
+  def normalize_words(words_to_normalize)
+    words_to_normalize.map { |word| word.upcase.gsub(/[^A-Z]/, "") }
+  end
+
+  def reject_blank_words(words_with_blanks)
+    words_with_blanks.reject(&:blank?)
   end
 end

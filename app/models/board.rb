@@ -1,23 +1,14 @@
 class Board < ActiveRecord::Base
+  has_many :submissions, dependent: :destroy
+
   validates :letters, presence: true
   validate :board_size_is_a_square_number
-  has_many :words, dependent: :destroy
 
-  def gridify_board   
-    4.times.map do 
-      qs_to_qus(letters.slice!(0..3).chars)
-    end
-  end
-
-  def boundary
+  def width
     Math.sqrt(letters.size).to_i
   end
 
   private
-
-  def qs_to_qus(array)
-    array.map { |letter| letter == "Q" ? "Qu" : letter }
-  end
 
   def board_size_is_a_square_number
     sqrt = Math.sqrt(letters.size)

@@ -1,14 +1,14 @@
 <h1> KLOGGLE </h1>
 
 <div id="words_form_container">
-  <%= form_for :word, url: board_words_path(board_id: @board.id) do |f| %>
+  <%= form_for :submission, url: board_submissions_path(board_id: @board.id) do |f| %>
     <%= f.text_area :words, size: "35x16", autofocus: true, id: "words_text_area"%>
     <%= f.submit "Submit Words", class: "submit_words_button btn" %>
   <% end %>
 </div>
 
   <table id="board">
-    <% @board.gridify_board.each do |row| %>
+    <% @board_grid.each do |row| %>
       <tr>
         <% row.each do |letter| %>
             <td>
@@ -29,7 +29,7 @@
             Valid Words
           </td>
         </tr>
-        <% @validated_words[:valid_words].each do |word| %>
+        <% @validated_words.valid_words.each do |word| %>
           <tr>
             <td>
               <%= word.word %> <%= word.score %>
@@ -46,7 +46,7 @@
             Invalid Words
           </td>
         </tr>
-        <% @validated_words[:invalid_words].each do |word| %>
+        <% @validated_words.invalid_words.each do |word| %>
           <tr>
             <td>
               <%= word.word %>
@@ -58,7 +58,7 @@
 
     <div class="total_score_container">
       <p>
-        Your Total Score: <%= @validated_words[:valid_words].map { |word| word.score }.reduce(:+) || 0%>
+        Your Total Score: <%= @validated_words.valid_words.map { |word| word.score }.reduce(:+) || 0%>
       </p>
     </div>
 </div>

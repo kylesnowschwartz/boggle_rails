@@ -11,6 +11,6 @@ describe "submit words for validation" do
   end
 
   it "saves those words to the board" do
-    expect(board.words.pluck("word")).to eq ["TOAST", "BEER", "CHEESE", "APPLE"]
+    expect(board.submissions.pluck("word")).to eq ["TOAST", "BEER", "CHEESE", "APPLE"]
   end
 end

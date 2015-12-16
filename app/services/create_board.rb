@@ -14,7 +14,7 @@ class CreateBoard
 
   def shaken_letters
     randomly_ordered_dice.map do |die|
-      roll_a_die(die)
+      random_die_face(die)
     end.join
   end
 
@@ -22,7 +22,7 @@ class CreateBoard
     DICE.shuffle
   end
 
-  def roll_a_die(die)
+  def random_die_face(die)
     die.chars.sample
   end
 end
